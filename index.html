@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expense Tracker</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
+    <link rel="stylesheet" href="./fontawesome-free-6.6.0-web/">
+    <link rel="stylesheet" href="./css/Poppins/Poppins-BlackItalic.ttf">
+    <link rel="stylesheet" href="./css/bootstrap.min.css">
+     <link rel="stylesheet" href="./css/style.css">
+</head>
+<body>
+
+   <header>
+  <div class="container header-container mt-2 p-2">
+    <h5> Expense Tracker</h5>
+  </div>
+   </header>
+
+   <section class="container items-form mt-2 mb-2">
+      <div class="w-75 mx-auto mt-4">
+        <div class="form-floating mb-3">
+        <input type="text" oninput="validateItemInput(this)" class="form-control " id="itemTitle" placeholder="Title">
+        <div class="alert alert-danger p-1 mt-2 d-none">
+            <small>Title is required</small>
+        </div>
+        <label for="itemTitle">Title</label>
+       </div>
+        <div class="form-floating mb-3">
+        <input  list="Category" oninput="validateItemInput(this)" class="form-control " id="itemCategory" placeholder="Category">
+        <div class="alert alert-danger p-1 mt-2 d-none">
+            <small>Category is required</small>
+        </div>
+        <label for="itemCategory">Category</label>
+        <datalist id="Category">
+            <option value="Food & Drinks"/>
+            <option value="Transportations"/>
+            <option value="Shopping"/>
+            <option value="Entertainment"/>
+            <option value="Other"/>
+        </datalist>
+       </div>
+        <div class="form-floating mb-3">
+        <input type="number" oninput="validateItemInput(this)" class="form-control " id="itemAmount" placeholder="Money Spent">
+        <div class="alert alert-danger p-1 mt-2 d-none">
+            <small> Money spent is required (only numbers allow)</small>
+            
+        </div>
+        <label for="itemAmount">Money Spent</label>
+       </div>
+        <div class="form-floating mb-3">
+        <input type="date" class="form-control " id="itemDate" placeholder="Date">
+        <label for="itemDate">Date</label>
+       </div>
+       <div class="form-btn">
+        <button disabled id="addBtn" class="btn addBtn" onclick="addItem()" >Add Item</button>
+       </div>
+      </div>
+   </section>
+
+   <section>
+    <div class="total container w-75 mt-3 mb-1 p-2">
+    <h3 id="totalAmount">Total: 0</h3>
+    <canvas id="categoryChart" ></canvas>
+    </div>
+
+
+
+   </section>
+
+   <section class="container w-75 item-list mt-5 mb-5 pb-5">
+    <h3 >My items </h3>
+    <div class="container search">
+         <div class="form-floating mb-3">
+        <input type="text" oninput="search(this.value)" class="form-control " id="searchItem" placeholder="Search">
+        <label for="searchItem">search category...</label>
+       </div>
+    </div>
+    <div class=" items gy-4" id="myitems">
+    </div>
+   </section>
+             
+
+
+
+
+
+
+
+
+
+
+
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="./js/bootstrap.bundle.js"></script>
+    <script src="./js/script.js"></script>
+</body>
+</html>
