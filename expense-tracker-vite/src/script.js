@@ -90,14 +90,16 @@ function addItem(){
 }
 
 function clear(){
- itemTitle.value=null
- itemCategory.value=null
- itemAmount.value=null
- itemDate.value=null
- addBtn.disabled  = true 
- 
+  [itemTitle, itemCategory, itemAmount].forEach(input => {
+    input.value = '';
+    input.classList.remove('is-valid', 'is-invalid'); 
+    input.nextElementSibling.classList.add('d-none'); 
+  });
+  addBtn.disabled = true;
 
+  
 }
+
 
 function sumTotal(){
     return itemList.reduce((total,item)=>total+=Number(item.amount),0);
