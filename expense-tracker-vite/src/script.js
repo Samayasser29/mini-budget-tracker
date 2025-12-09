@@ -1,9 +1,17 @@
+import Chart from 'chart.js/auto';
 
-var itemTitle =document.querySelector('#itemTitle')
-var itemCategory =document.querySelector('#itemCategory')
-var itemAmount =document.querySelector('#itemAmount')
-var itemDate =document.querySelector('#itemDate')
+export function initExpenseTracker() {
+
+const itemTitle =document.querySelector('#itemTitle')
+const itemCategory =document.querySelector('#itemCategory')
+const itemAmount =document.querySelector('#itemAmount')
+const itemDate =document.querySelector('#itemDate')
+const addBtn = document.querySelector('#addBtn');
+const searchInput = document.querySelector('#searchItem');
+const categoryChartCanvas = document.querySelector('#categoryChart');
 var itemList = []
+let categoryChart; 
+
  var regex ={
         itemTitle : {
             value: /^[a-zA-Z][a-zA-Z  ]{2,15}$/ ,
@@ -22,11 +30,26 @@ var itemList = []
 if(localStorage.getItem("itemList") != null){
     itemList =JSON.parse(localStorage.getItem("itemList"))
    displayItems(itemList)
+   renderCategoryChart();
+   displayAmount();
 }
 
-console.log(itemTitle,itemCategory,itemAmount,itemDate)
+addBtn.addEventListener('click',addItem);
 
-function setStorage(){
+searchInput.addEventListener('input', e => search(e.target.value));
+ [itemTitle, itemCategory, itemAmount].forEach(input => {
+    input.addEventListener('input', () => validateItemInput(input));
+  });
+//delete  
+document.querySelector('#myitems').addEventListener('click', (e) => {
+  if (e.target.closest('.delete-btn')) {
+    const index = e.target.closest('.delete-btn').dataset.index;
+    deleteItem(index);
+  }
+});  
+
+
+ function setStorage(){
    localStorage.setItem("itemList" ,JSON.stringify(itemList))
 
 }
@@ -44,28 +67,11 @@ function addItem(){
     setStorage() 
     displayItems(itemList )
     clear()
-    displatAmount()
+    displayAmount()
     renderCategoryChart();
-    console.log(itemList)
 }
 
-// function displayItems(){
-//     var cartona = `` ;
-//     for(var i =0 ;i < itemList.length ; i++){
-//         cartona +=` <div class="item-card w-75 mx-auto mt-2 mb-2 ">
-//            <h4>${itemList[i].title}</h4>
-//            <h5>${itemList[i].category}</h5>
-//            <div class="item-card-data">
-//              <h6>${itemList[i].amount}</h6>
-//              <span>${itemList[i].date}</span>
-//            </div>
-//         </div>`
-
-//         document.querySelector('#myitems').innerHTML =cartona
-//     }
-// }
-
-function displayItems(list) {
+ function displayItems(list) {
   document.querySelector('#myitems').innerHTML =
     list
       .map((item ,index)=> 
@@ -75,27 +81,31 @@ function displayItems(list) {
           <div class="item-card-data">
             <h6>${item.amount}</h6>
             <span>${item.date}</span>
-            <span onclick="deleteItem(${index})"> <i class="fa-solid fa-trash"></i></span>
-          </div>
+             <span class="delete-btn" data-index="${index}">
+            <i class="fa-solid fa-trash"></i>
+              </span>         
+               </div>
         </div> `)
       .join('') ;
 }
 
 function clear(){
- itemTitle.value=null
- itemCategory.value=null
- itemAmount.value=null
- itemDate.value=null
- addBtn.disabled  = true 
- 
+  [itemTitle, itemCategory, itemAmount].forEach(input => {
+    input.value = '';
+    input.classList.remove('is-valid', 'is-invalid'); 
+    input.nextElementSibling.classList.add('d-none'); 
+  });
+  addBtn.disabled = true;
 
+  
 }
+
 
 function sumTotal(){
     return itemList.reduce((total,item)=>total+=Number(item.amount),0);
 }
 
-function displatAmount(){
+function displayAmount(){
      const totalAmount = sumTotal();
     document.querySelector("#totalAmount").textContent = "Total: " + totalAmount;
 } 
@@ -104,6 +114,7 @@ function deleteItem(index){
     itemList.splice(index,1)
     setStorage()
     displayItems(itemList)
+    displayAmount()
     renderCategoryChart();
    
 }
@@ -144,29 +155,6 @@ function toggleAddBtn(){
     }
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 function getCategoryData() {
     const data = {};
 
@@ -186,8 +174,6 @@ function getCategoryData() {
 
     return { labels, amounts };
 }
-
-let categoryChart; 
 
 function renderCategoryChart() {
     const ctx = document.getElementById('categoryChart').getContext('2d');
@@ -236,4 +222,9 @@ function renderCategoryChart() {
             }
         });
     }
+}
+
+
+
+
 }
